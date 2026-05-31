@@ -51,39 +51,52 @@ router.post('/book', authenticate, authorize('patient'), async (req, res) => {
   try {
     const { doctor_id, appointment_date, appointment_time, reason, symptoms_summary } = req.body;
 
+    console.log('[BOOK] Incoming:', { doctor_id, appointment_date, appointment_time, patient_id: req.user.id });
+
     if (!doctor_id || !appointment_date || !appointment_time) {
       return res.status(400).json({ success: false, message: 'Doctor, date and time are required' });
     }
 
+    // Normalize time format to HH:MM:SS
+    let timeNormalized = appointment_time;
+    if (typeof timeNormalized === 'string' && timeNormalized.length === 5) {
+      timeNormalized = timeNormalized + ':00';
+    }
+
     // Check if doctor exists
-    const [doctor] = await db.query('SELECT id FROM users WHERE id = ? AND user_type = "doctor"', [doctor_id]);
+    const [doctor] = await db.query("SELECT id FROM users WHERE id = ? AND user_type = 'doctor'", [doctor_id]);
     if (doctor.length === 0) {
       return res.status(404).json({ success: false, message: 'Doctor not found' });
     }
 
     // Check for existing appointment at the same time
     const [conflict] = await db.query(
-      'SELECT id FROM appointments WHERE doctor_id = ? AND appointment_date = ? AND appointment_time = ? AND status NOT IN ("cancelled")',
-      [doctor_id, appointment_date, appointment_time]
+      "SELECT id FROM appointments WHERE doctor_id = ? AND appointment_date = ? AND appointment_time = ? AND status NOT IN ('cancelled')",
+      [doctor_id, appointment_date, timeNormalized]
     );
     if (conflict.length > 0) {
-      return res.status(400).json({ success: false, message: 'This time slot is already booked. Please choose another.' });
+      return res.status(400).json({ success: false, message: 'This time slot is already booked. Please choose another time.' });
     }
 
     const [result] = await db.query(
       `INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time, reason, symptoms_summary, status)
        VALUES (?, ?, ?, ?, ?, ?, 'pending')`,
-      [req.user.id, doctor_id, appointment_date, appointment_time, reason || null, symptoms_summary || null]
+      [req.user.id, doctor_id, appointment_date, timeNormalized, reason || null, symptoms_summary || null]
     );
 
+    console.log('[BOOK] Success, id:', result.insertId);
     res.status(201).json({
       success: true,
       message: 'Appointment booked successfully',
       appointment_id: result.insertId,
     });
   } catch (error) {
-    console.error('Book appointment error:', error);
-    res.status(500).json({ success: false, message: 'Booking failed', error: error.message });
+    console.error('[BOOK] Error:', error.code, error.sqlMessage || error.message);
+    res.status(500).json({
+      success: false,
+      message: error.sqlMessage || error.message || 'Booking failed',
+      code: error.code,
+    });
   }
 });
 
