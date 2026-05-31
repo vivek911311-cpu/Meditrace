@@ -29,6 +29,16 @@
   --warn: #c98a1e;
   --bad: #b73a2a;
 
+  /* Sidebar — always dark, light text, regardless of theme */
+  --sidebar-bg: #0f1f1c;
+  --sidebar-text: #ecebe5;
+  --sidebar-text-mute: rgba(246,243,236,0.7);
+  --sidebar-text-faint: rgba(246,243,236,0.55);
+  --sidebar-border: rgba(255,255,255,0.08);
+  --sidebar-hover: rgba(255,255,255,0.08);
+  --sidebar-active-bg: #1f4f47;
+  --sidebar-active-text: #ffffff;
+
   /* Type */
   --serif: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
   --sans: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
@@ -48,7 +58,7 @@
   --bg: #0e1614;
   --bg-soft: #161f1c;
   --bg-card: #1c2724;
-  --ink: #e8e4db;
+  --ink: #ecebe5;
   --ink-soft: #b8c0bd;
   --ink-mute: #828a87;
   --line: #2b3733;
@@ -71,6 +81,16 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
   --shadow: 0 4px 12px rgba(0,0,0,0.4);
   --shadow-lg: 0 20px 50px rgba(0,0,0,0.5);
+
+  /* Sidebar in dark mode — slightly darker than card background for contrast */
+  --sidebar-bg: #060c0b;
+  --sidebar-text: #ecebe5;
+  --sidebar-text-mute: rgba(236,235,229,0.75);
+  --sidebar-text-faint: rgba(236,235,229,0.55);
+  --sidebar-border: rgba(255,255,255,0.06);
+  --sidebar-hover: rgba(255,255,255,0.08);
+  --sidebar-active-bg: #4a9388;
+  --sidebar-active-text: #ffffff;
 }
 
 * { box-sizing: border-box; }
@@ -325,8 +345,8 @@ a:hover { color: var(--ember); }
   min-height: 100vh;
 }
 .dash-sidebar {
-  background: var(--ink);
-  color: #f6f3ec;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
   padding: 1.5rem 0;
   position: sticky;
   top: 0;
@@ -337,7 +357,7 @@ a:hover { color: var(--ember); }
 }
 .dash-logo {
   padding: 0 1.5rem 1.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--sidebar-border);
   margin-bottom: 1rem;
 }
 .dash-logo .logo-mark {
@@ -347,7 +367,7 @@ a:hover { color: var(--ember); }
   font-family: var(--serif);
   font-size: 1.4rem;
   font-style: italic;
-  color: #fff;
+  color: var(--sidebar-text);
 }
 .dash-logo .logo-mark span.mark {
   display: inline-flex;
@@ -372,6 +392,9 @@ a:hover { color: var(--ember); }
   font-size: 0.7rem;
   color: var(--gold);
   letter-spacing: 0.1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .dash-nav { flex: 1; padding: 0 0.75rem; }
 .dash-nav-item {
@@ -381,7 +404,7 @@ a:hover { color: var(--ember); }
   padding: 0.7rem 0.9rem;
   margin-bottom: 0.15rem;
   border-radius: var(--radius-sm);
-  color: rgba(246,243,236,0.7);
+  color: var(--sidebar-text-mute);
   font-size: 0.92rem;
   cursor: pointer;
   transition: all .12s;
@@ -392,10 +415,10 @@ a:hover { color: var(--ember); }
   text-align: left;
   font-family: inherit;
 }
-.dash-nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.dash-nav-item:hover { background: var(--sidebar-hover); color: var(--sidebar-text); }
 .dash-nav-item.active {
-  background: var(--teal);
-  color: #fff;
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
 }
 .dash-nav-item .nav-icon {
   width: 18px;
@@ -407,12 +430,12 @@ a:hover { color: var(--ember); }
 }
 .dash-foot {
   padding: 1rem 1.5rem 0;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid var(--sidebar-border);
 }
 .dash-foot button {
   background: transparent;
   border: 1px solid rgba(255,255,255,0.15);
-  color: rgba(246,243,236,0.8);
+  color: var(--sidebar-text-mute);
   padding: 0.5rem 1rem;
   border-radius: 999px;
   font-size: 0.85rem;
@@ -1052,7 +1075,7 @@ table.simple th {
   gap: 0.5rem;
   background: transparent;
   border: 1px solid rgba(255,255,255,0.15);
-  color: rgba(246,243,236,0.8);
+  color: var(--sidebar-text-mute);
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
   font-size: 0.82rem;
@@ -1062,7 +1085,7 @@ table.simple th {
   transition: all .15s;
   font-family: inherit;
 }
-.theme-toggle:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.theme-toggle:hover { background: var(--sidebar-hover); color: var(--sidebar-text); }
 .theme-toggle .toggle-icon { font-size: 1rem; }
 
 /* Profile photo */
@@ -1136,7 +1159,7 @@ table.simple th {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #fff;
+  color: var(--sidebar-text);
 }
 
 /* Medicine request card */
@@ -1179,7 +1202,31 @@ table.simple th {
   background: var(--bg-soft);
 }
 
-
+/* Language switcher in sidebar */
+.lang-switcher {
+  display: flex;
+  gap: 0.2rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+  padding: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+.lang-switcher button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--sidebar-text-faint);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.35rem 0.4rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.lang-switcher button.active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+}
 
 /* Make sure inputs/cards adapt to dark mode */
 [data-theme="dark"] .form-input,
@@ -1200,51 +1247,74 @@ table.simple th {
   background: var(--bg-soft);
 }
 
-/* Dark mode — alert boxes */
-[data-theme="dark"] .alert-warn { background: rgba(184,138,46,0.15); color: var(--warn); }
-[data-theme="dark"] .alert-bad { background: rgba(183,58,42,0.15); color: var(--bad); }
-[data-theme="dark"] .alert-info { background: rgba(74,147,136,0.15); color: var(--teal-glow); }
-
-/* Dark mode — stock tags */
-[data-theme="dark"] .stock-tag.in_stock { background: rgba(46,125,91,0.2); color: var(--ok); }
-[data-theme="dark"] .stock-tag.low_stock { background: rgba(184,138,46,0.2); color: var(--warn); }
-[data-theme="dark"] .stock-tag.out_of_stock { background: rgba(183,58,42,0.2); color: var(--bad); }
-
-/* Dark mode — status tags */
-[data-theme="dark"] .status-tag.completed { background: rgba(46,125,91,0.2); color: var(--ok); }
-[data-theme="dark"] .status-tag.confirmed,
-[data-theme="dark"] .status-tag.active { background: rgba(74,147,136,0.2); color: var(--teal-glow); }
-[data-theme="dark"] .status-tag.pending { background: rgba(184,138,46,0.2); color: var(--warn); }
-[data-theme="dark"] .status-tag.cancelled { background: rgba(183,58,42,0.2); color: var(--bad); }
-
-/* Dark mode — severity tags */
-[data-theme="dark"] .sev-tag.mild { background: rgba(184,138,46,0.2); color: var(--gold); }
-[data-theme="dark"] .sev-tag.moderate { background: rgba(224,119,97,0.2); color: var(--ember); }
-[data-theme="dark"] .sev-tag.severe { background: rgba(183,58,42,0.2); color: var(--bad); }
-
-/* Dark mode — req status */
-[data-theme="dark"] .req-status.pending { background: rgba(184,138,46,0.2); color: var(--warn); }
-[data-theme="dark"] .req-status.accepted { background: rgba(74,147,136,0.2); color: var(--teal-glow); }
-[data-theme="dark"] .req-status.ready,
-[data-theme="dark"] .req-status.completed { background: rgba(46,125,91,0.2); color: var(--ok); }
-[data-theme="dark"] .req-status.rejected { background: rgba(183,58,42,0.2); color: var(--bad); }
-
-/* Dark mode — prob ring bg circle */
-[data-theme="dark"] .prob-ring circle:first-child { stroke: var(--line); }
-
-/* Dark mode — modal backdrop */
-[data-theme="dark"] .modal-backdrop { background: rgba(0,0,0,0.6); }
-
-/* Dark mode — demo accounts code tag */
-[data-theme="dark"] code { background: var(--bg-soft); color: var(--ink); padding: 0.1em 0.3em; border-radius: 3px; }
-
-/* Dark mode — landing page logo */
-[data-theme="dark"] .logo { color: var(--ink); }
-
-/* Dark mode — auth form strong text */
-[data-theme="dark"] .auth-pane strong { color: var(--ink); }
-
 /* Smooth theme transition */
 body, .card, .stat, .list-card, .doctor-card, .habit-card, .req-card {
   transition: background-color .2s, color .2s, border-color .2s;
 }
+
+/* ===========================================================
+   PHASE 3 — Comprehensive dark mode polish
+   =========================================================== */
+
+[data-theme="dark"] .btn-ghost {
+  color: var(--ink);
+  border-color: var(--line);
+}
+[data-theme="dark"] .btn-ghost:hover {
+  background: var(--bg-soft);
+}
+
+[data-theme="dark"] .auth-tabs { background: var(--bg-soft); }
+[data-theme="dark"] .auth-tab.active { background: var(--bg-card); color: var(--ink); }
+[data-theme="dark"] .user-type-card { background: var(--bg-card); border-color: var(--line); }
+[data-theme="dark"] .user-type-card.active { background: var(--teal-light); border-color: var(--teal); }
+
+[data-theme="dark"] .severity-row { border-color: var(--line-soft); }
+[data-theme="dark"] .sev-pill { background: var(--bg-soft); border-color: var(--line); color: var(--ink); }
+[data-theme="dark"] .sev-pill.active { background: var(--ember); color: #fff; border-color: var(--ember); }
+
+[data-theme="dark"] .symptom-grid { background: var(--bg); border-color: var(--line-soft); }
+[data-theme="dark"] .symptom-chip:hover { border-color: var(--teal-glow); }
+[data-theme="dark"] .symptom-category { color: var(--ink-mute); }
+
+[data-theme="dark"] .disease-card { background: var(--bg-card); border-color: var(--line-soft); }
+[data-theme="dark"] .doctor-card { background: var(--bg-card); border-color: var(--line-soft); }
+[data-theme="dark"] .list-card { background: var(--bg-card); border-color: var(--line-soft); }
+[data-theme="dark"] .stat { background: var(--bg-card); border-color: var(--line-soft); }
+
+[data-theme="dark"] .doctor-avatar { background: var(--teal-light); color: var(--teal-deep); }
+[data-theme="dark"] .prob-ring svg circle:first-child { stroke: var(--line); }
+
+[data-theme="dark"] .habit-thumb { background: var(--teal-light); color: var(--teal-deep); }
+[data-theme="dark"] .medicine-row { background: var(--bg-card); border-color: var(--line-soft); }
+[data-theme="dark"] .req-card { background: var(--bg-card); border-color: var(--line-soft); }
+[data-theme="dark"] .card { background: var(--bg-card); border-color: var(--line-soft); }
+[data-theme="dark"] .card-soft { background: var(--bg-soft); }
+
+[data-theme="dark"] .auth-tab { color: var(--ink-mute); }
+[data-theme="dark"] .modal { background: var(--bg-card); color: var(--ink); }
+[data-theme="dark"] .alert-warn { background: rgba(184,138,46,0.15); border-color: var(--gold); color: var(--gold); }
+[data-theme="dark"] .alert-bad { background: rgba(183,58,42,0.15); border-color: var(--bad); color: var(--bad); }
+[data-theme="dark"] .alert-info { background: rgba(31,79,71,0.2); border-color: var(--teal); color: var(--teal-glow); }
+
+/* Form labels and text in dark mode */
+[data-theme="dark"] .form-label { color: var(--ink); }
+[data-theme="dark"] table.simple { color: var(--ink); }
+[data-theme="dark"] table.simple td { border-color: var(--line-soft); }
+
+/* Status tags - keep contrast in dark mode */
+[data-theme="dark"] .status-tag.pending { background: rgba(184,138,46,0.2); color: var(--gold); }
+[data-theme="dark"] .status-tag.confirmed { background: rgba(31,79,71,0.3); color: var(--teal-glow); }
+[data-theme="dark"] .status-tag.completed { background: rgba(46,125,91,0.2); color: var(--ok); }
+[data-theme="dark"] .status-tag.cancelled { background: rgba(183,58,42,0.2); color: var(--bad); }
+[data-theme="dark"] .status-tag.active { background: rgba(31,79,71,0.3); color: var(--teal-glow); }
+
+[data-theme="dark"] .req-status.pending { background: rgba(184,138,46,0.2); color: var(--gold); }
+[data-theme="dark"] .req-status.accepted { background: rgba(31,79,71,0.3); color: var(--teal-glow); }
+[data-theme="dark"] .req-status.ready { background: rgba(46,125,91,0.2); color: var(--ok); }
+[data-theme="dark"] .req-status.completed { background: rgba(46,125,91,0.2); color: var(--ok); }
+[data-theme="dark"] .req-status.rejected { background: rgba(183,58,42,0.2); color: var(--bad); }
+
+[data-theme="dark"] .stock-tag.in_stock { background: rgba(46,125,91,0.2); color: var(--ok); }
+[data-theme="dark"] .stock-tag.low_stock { background: rgba(184,138,46,0.2); color: var(--gold); }
+[data-theme="dark"] .stock-tag.out_of_stock { background: rgba(183,58,42,0.2); color: var(--bad); }

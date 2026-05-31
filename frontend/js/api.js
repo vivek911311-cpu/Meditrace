@@ -1,4 +1,4 @@
-/* MediTrace — API client & shared utilities */
+/* MediTrace — API client & shared utilities (Phase 3 — language removed) */
 
 const API_BASE = '/api';
 const TOKEN_KEY = 'meditrace_token';
@@ -61,7 +61,6 @@ const Theme = {
   set: (theme) => {
     localStorage.setItem(THEME_KEY, theme);
     document.documentElement.setAttribute('data-theme', theme);
-    // Persist to server in background (if logged in)
     if (Auth.isLoggedIn()) {
       api('/auth/preferences', { method: 'PUT', body: { theme } }).catch(() => {});
     }
@@ -75,10 +74,9 @@ const Theme = {
     document.documentElement.setAttribute('data-theme', t);
   }
 };
-// Apply theme immediately to avoid flash
 Theme.init();
 
-
+/* Toast notifications */
 function toast(message, type = 'info', duration = 3500) {
   let stack = document.querySelector('.toast-stack');
   if (!stack) {
@@ -134,24 +132,38 @@ function requireLogin(allowedTypes) {
   return user;
 }
 
-/* Format helpers */
+/* Format helpers — robust to ISO and YYYY-MM-DD formats */
 function fmtDate(s) {
   if (!s) return '—';
+  // MySQL DATE comes back as 'YYYY-MM-DD' or sometimes ISO string
   const d = new Date(s);
+  if (isNaN(d)) return s;
   return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 function fmtDateTime(s) {
   if (!s) return '—';
   const d = new Date(s);
+  if (isNaN(d)) return s;
   return d.toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 function fmtTime(t) {
   if (!t) return '—';
-  const [h, m] = t.split(':');
-  const hh = parseInt(h, 10);
+  // MySQL TIME comes back as HH:MM:SS string
+  const parts = String(t).split(':');
+  if (parts.length < 2) return t;
+  const hh = parseInt(parts[0], 10);
+  const m = parts[1];
   const ampm = hh >= 12 ? 'PM' : 'AM';
   const h12 = hh % 12 || 12;
   return `${h12}:${m} ${ampm}`;
+}
+function dateOnly(s) {
+  // Returns YYYY-MM-DD regardless of input format
+  if (!s) return '';
+  if (typeof s === 'string' && s.match(/^\d{4}-\d{2}-\d{2}/)) return s.substring(0, 10);
+  const d = new Date(s);
+  if (isNaN(d)) return '';
+  return d.toISOString().split('T')[0];
 }
 function escapeHtml(s) {
   if (s == null) return '';
@@ -162,14 +174,12 @@ function initials(name) {
   return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
 }
 
-/* Decorative heartbeat SVG */
 function heartbeatSVG(color = 'currentColor') {
   return `<svg class="heartbeat-line" viewBox="0 0 800 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M0 20 L100 20 L120 20 L140 5 L160 35 L180 5 L200 35 L220 20 L350 20 L370 12 L385 28 L400 5 L415 35 L430 12 L450 20 L600 20 L620 20 L640 8 L660 32 L680 20 L800 20" stroke="${color}" stroke-width="1.5" fill="none"/>
   </svg>`;
 }
 
-/* Probability ring SVG */
 function probRingSVG(pct, color = '#1f4f47') {
   const r = 24, c = 2 * Math.PI * r;
   const offset = c - (pct / 100) * c;
@@ -180,9 +190,7 @@ function probRingSVG(pct, color = '#1f4f47') {
   </svg>`;
 }
 
-/* Profile photo HTML helper */
 function photoHtml(user, size = '') {
-  // size: '', 'sm', 'xs'
   const cls = size ? `profile-photo-${size}` : '';
   if (user && user.profile_image && user.profile_image.startsWith('data:')) {
     return `<span class="profile-photo ${cls}"><img src="${user.profile_image}" alt=""/></span>`;
@@ -190,7 +198,7 @@ function photoHtml(user, size = '') {
   return `<span class="profile-photo ${cls}">${initials(user?.full_name || user?.name || '?')}</span>`;
 }
 
-/* Theme toggle widget — call this in sidebars */
+/* Theme toggle widget */
 function renderThemeToggle(container) {
   if (!container) return;
   const cur = Theme.get();
@@ -198,5 +206,3 @@ function renderThemeToggle(container) {
   const label = cur === 'dark' ? 'Light mode' : 'Dark mode';
   container.innerHTML = `<button class="theme-toggle" onclick="Theme.toggle(); renderThemeToggle(this.parentElement);"><span class="toggle-icon">${icon}</span><span>${label}</span></button>`;
 }
-
-

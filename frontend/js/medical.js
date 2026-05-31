@@ -96,7 +96,12 @@ async function loadIncomingRequests() {
   el.innerHTML = '<div class="page-loader"><span class="spinner"></span></div>';
   const res = await api('/medicine-requests/');
   if (!res.success || !res.requests?.length) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">·</div><p>No incoming requests yet. They'll appear here when patients request medicines from your shop.</p></div>`;
+    el.innerHTML = `<div class="empty">
+      <div class="empty-icon">·</div>
+      <p><strong>No incoming requests yet.</strong></p>
+      <p class="text-sm text-mute">When patients request medicines from <strong>${escapeHtml(user.full_name)}</strong>, they'll appear here.</p>
+      <p class="text-sm text-mute mt-2">Make sure your medicines are listed in the Inventory tab so patients can find and request them.</p>
+    </div>`;
     return;
   }
   el.innerHTML = res.requests.map(r => `

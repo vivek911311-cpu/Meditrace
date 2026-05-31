@@ -21,16 +21,17 @@
       <div class="uname"><div class="nm">—</div><div class="uid">—</div></div>
     </div>
     <nav class="dash-nav">
-      <button class="dash-nav-item active" data-tab="home"><span class="nav-icon">⌂</span> Home</button>
-      <button class="dash-nav-item" data-tab="checker"><span class="nav-icon">◐</span> Symptom Checker</button>
-      <button class="dash-nav-item" data-tab="appointments"><span class="nav-icon">◧</span> Appointments</button>
-      <button class="dash-nav-item" data-tab="habits"><span class="nav-icon">✻</span> Healthy Habits</button>
-      <button class="dash-nav-item" data-tab="medication"><span class="nav-icon">℞</span> Medications</button>
-      <button class="dash-nav-item" data-tab="medicines"><span class="nav-icon">◊</span> Find Medicine</button>
-      <button class="dash-nav-item" data-tab="requests"><span class="nav-icon">📩</span> My Requests</button>
-      <button class="dash-nav-item" data-tab="profile"><span class="nav-icon">◉</span> Profile</button>
+      <button class="dash-nav-item active" data-tab="home"><span class="nav-icon">⌂</span> <span>Home</span></button>
+      <button class="dash-nav-item" data-tab="checker"><span class="nav-icon">◐</span> <span>Symptom Checker</span></button>
+      <button class="dash-nav-item" data-tab="appointments"><span class="nav-icon">◧</span> <span>Appointments</span></button>
+      <button class="dash-nav-item" data-tab="habits"><span class="nav-icon">✻</span> <span>Healthy Habits</span></button>
+      <button class="dash-nav-item" data-tab="medication"><span class="nav-icon">℞</span> <span>Medications</span></button>
+      <button class="dash-nav-item" data-tab="medicines"><span class="nav-icon">◊</span> <span>Find Medicine</span></button>
+      <button class="dash-nav-item" data-tab="requests"><span class="nav-icon">📩</span> <span>My Requests</span></button>
+      <button class="dash-nav-item" data-tab="profile"><span class="nav-icon">◉</span> <span>Profile</span></button>
     </nav>
     <div class="dash-foot">
+      
       <div id="theme-toggle-container"></div>
       <button onclick="Auth.logout()">Sign out</button>
     </div>
@@ -77,7 +78,7 @@
     <section id="tab-checker" class="tab-section">
       <div id="checker-step-1">
         <div class="card mb-3">
-          <span class="eyebrow">Step 1 · Symptoms</span>
+          <span class="eyebrow">Step 1 · <span>Symptoms</span></span>
           <h3>What are you feeling today?</h3>
           <p>Select all symptoms that apply. We'll ask about severity in the next step.</p>
           <input type="text" id="symptom-search" class="form-input mb-2" placeholder="Search symptoms (e.g. fever, headache, cough)..." />

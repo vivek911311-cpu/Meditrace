@@ -128,18 +128,18 @@ async function loadHome() {
   const rx = rRes.prescriptions || [];
   state.prescriptions = rx;
 
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('stat-today').textContent = appts.filter(a => a.appointment_date && a.appointment_date.startsWith(today)).length;
+  const today = dateOnly(new Date());
+  document.getElementById('stat-today').textContent = appts.filter(a => dateOnly(a.appointment_date) === today).length;
   document.getElementById('stat-pending').textContent = appts.filter(a => a.status === 'pending').length;
   const uniquePatients = new Set(appts.map(a => a.patient_id));
   document.getElementById('stat-patients').textContent = uniquePatients.size;
   document.getElementById('stat-rx').textContent = rx.length;
 
-  // Upcoming
+  // Upcoming — today + tomorrow
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
-  const tStr = tomorrow.toISOString().split('T')[0];
+  const tStr = dateOnly(tomorrow);
   const upcoming = appts.filter(a => {
-    const d = a.appointment_date?.split('T')[0];
+    const d = dateOnly(a.appointment_date);
     return (d === today || d === tStr) && ['pending', 'confirmed'].includes(a.status);
   });
 
@@ -161,7 +161,16 @@ function renderAppointments() {
   const list = state.apptFilter === 'all' ? state.appointments : state.appointments.filter(a => a.status === state.apptFilter);
   const el = document.getElementById('appointments-list');
   if (!list.length) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">·</div><p>No appointments in this view.</p></div>`;
+    if (state.appointments.length === 0) {
+      el.innerHTML = `<div class="empty">
+        <div class="empty-icon">·</div>
+        <p><strong>No appointments yet for your account.</strong></p>
+        <p class="text-sm text-mute">When a patient books with you (Dr. ${escapeHtml(user.full_name)}, ID: ${escapeHtml(user.unique_id)}), it will appear here.</p>
+        <p class="text-sm text-mute mt-2">Patients can find you under specialization "${escapeHtml(state.specialization || 'your specialty')}" in the Symptom Checker results or in the "Book new appointment" doctor list.</p>
+      </div>`;
+    } else {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">·</div><p>No appointments in "${escapeHtml(state.apptFilter)}" filter.</p><p class="text-sm text-mute">Try clicking "All" above to see all your appointments.</p></div>`;
+    }
     return;
   }
   el.innerHTML = list.map(a => apptCardHtml(a)).join('');

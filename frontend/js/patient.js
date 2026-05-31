@@ -95,8 +95,10 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-section').forEach(s => s.classList.toggle('active', s.id === 'tab-' + tab));
   document.getElementById('sidebar').classList.remove('open');
   const [eyebrow, title] = tabMeta[tab] || ['', ''];
-  document.getElementById('tab-eyebrow').textContent = eyebrow;
-  document.getElementById('tab-title').textContent = title;
+  const eb = document.getElementById('tab-eyebrow');
+  const tt = document.getElementById('tab-title');
+  if (eb) eb.textContent = eyebrow;
+  if (tt) tt.textContent = title;
   if (tab === 'appointments') loadAppointments();
   if (tab === 'habits') loadHabits();
   if (tab === 'medication') loadMedications();
