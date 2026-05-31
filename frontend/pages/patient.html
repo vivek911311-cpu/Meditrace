@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Dashboard · MediTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="dash-shell">
+  <aside class="dash-sidebar" id="sidebar">
+    <div class="dash-logo">
+      <a href="/pages/patient.html" class="logo-mark"><span class="mark">M</span> Medi<em>Trace</em></a>
+    </div>
+    <div class="dash-user" id="sidebar-user">
+      <span class="profile-photo profile-photo-sm">?</span>
+      <div class="uname"><div class="nm">—</div><div class="uid">—</div></div>
+    </div>
+    <nav class="dash-nav">
+      <button class="dash-nav-item active" data-tab="home"><span class="nav-icon">⌂</span> <span data-i18n="nav.home">Home</span></button>
+      <button class="dash-nav-item" data-tab="checker"><span class="nav-icon">◐</span> <span data-i18n="nav.checker">Symptom Checker</span></button>
+      <button class="dash-nav-item" data-tab="appointments"><span class="nav-icon">◧</span> <span data-i18n="nav.appointments">Appointments</span></button>
+      <button class="dash-nav-item" data-tab="habits"><span class="nav-icon">✻</span> <span data-i18n="nav.habits">Healthy Habits</span></button>
+      <button class="dash-nav-item" data-tab="medication"><span class="nav-icon">℞</span> <span data-i18n="nav.medication">Medications</span></button>
+      <button class="dash-nav-item" data-tab="medicines"><span class="nav-icon">◊</span> <span data-i18n="nav.medicines">Find Medicine</span></button>
+      <button class="dash-nav-item" data-tab="requests"><span class="nav-icon">📩</span> <span data-i18n="nav.requests">My Requests</span></button>
+      <button class="dash-nav-item" data-tab="profile"><span class="nav-icon">◉</span> <span data-i18n="nav.profile">Profile</span></button>
+    </nav>
+    <div class="dash-foot">
+      <div id="lang-switcher-container"></div>
+      <div id="theme-toggle-container"></div>
+      <button onclick="Auth.logout()" data-i18n="common.signout">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header">
+      <div>
+        <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <span class="eyebrow" id="tab-eyebrow">Overview</span>
+        <h1 id="tab-title">Your health dashboard</h1>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section id="tab-home" class="tab-section active">
+      <div class="stat-grid">
+        <div class="stat"><div class="label">Symptom checks</div><div class="value" id="stat-checks">—</div></div>
+        <div class="stat"><div class="label">Appointments</div><div class="value" id="stat-appts">—</div></div>
+        <div class="stat"><div class="label">Active Rx</div><div class="value" id="stat-rx">—</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <span class="eyebrow">Quick action</span>
+          <h3>Not feeling well?</h3>
+          <p>Run a symptom check — pick what you're feeling, add your vitals, and we'll surface the four most probable conditions and matching doctors near you.</p>
+          <button class="btn btn-primary" onclick="switchTab('checker')">Start a check →</button>
+        </div>
+        <div class="card card-soft">
+          <span class="eyebrow">Recent vitals</span>
+          <div id="recent-vitals"><div class="page-loader"><span class="spinner"></span></div></div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <span class="eyebrow">Recent activity</span>
+        <h3>Your latest checks</h3>
+        <div id="recent-checks"><div class="page-loader"><span class="spinner"></span></div></div>
+      </div>
+    </section>
+
+    <!-- SYMPTOM CHECKER -->
+    <section id="tab-checker" class="tab-section">
+      <div id="checker-step-1">
+        <div class="card mb-3">
+          <span class="eyebrow">Step 1 · Symptoms</span>
+          <h3>What are you feeling today?</h3>
+          <p>Select all symptoms that apply. We'll ask about severity in the next step.</p>
+          <input type="text" id="symptom-search" class="form-input mb-2" placeholder="Search symptoms (e.g. fever, headache, cough)..." />
+          <div class="symptom-grid" id="symptom-grid"><div class="page-loader"><span class="spinner"></span> Loading symptoms…</div></div>
+          <div class="mt-3 flex justify-between items-center" style="flex-wrap: wrap; gap: 0.5rem;">
+            <div class="text-sm text-mute"><span id="selected-count">0</span> selected</div>
+            <button class="btn btn-primary" id="to-step-2-btn" disabled>Next: severity & vitals →</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="checker-step-2" class="hidden">
+        <div class="card mb-3">
+          <span class="eyebrow">Step 2 · Severity</span>
+          <h3>How severe is each symptom?</h3>
+          <p>Tap 1 (mild) through 5 (severe) for each.</p>
+          <div id="severity-list"></div>
+        </div>
+
+        <div class="card mb-3">
+          <span class="eyebrow">Step 3 · Vitals <span class="text-mute" style="text-transform: none; letter-spacing: 0;">(optional but helps accuracy)</span></span>
+          <h3>Enter your vitals</h3>
+          <p>Manually, or pull from your wearable's app and paste here.</p>
+          <div class="vitals-grid">
+            <div class="vital-input-card"><label>Heart rate</label><input type="number" id="v-hr" placeholder="bpm" /><div class="unit">bpm</div></div>
+            <div class="vital-input-card"><label>Blood pressure (sys)</label><input type="number" id="v-sys" placeholder="120" /><div class="unit">mmHg</div></div>
+            <div class="vital-input-card"><label>Blood pressure (dia)</label><input type="number" id="v-dia" placeholder="80" /><div class="unit">mmHg</div></div>
+            <div class="vital-input-card"><label>Oxygen (SpO₂)</label><input type="number" id="v-o2" placeholder="98" /><div class="unit">%</div></div>
+            <div class="vital-input-card"><label>Blood sugar</label><input type="number" id="v-sugar" placeholder="100" /><div class="unit">mg/dL</div></div>
+            <div class="vital-input-card"><label>Temperature</label><input type="number" step="0.1" id="v-temp" placeholder="98.6" /><div class="unit">°F</div></div>
+          </div>
+          <div class="form-group mt-3">
+            <label class="form-label">Source</label>
+            <select id="v-source" class="form-select" style="max-width: 240px;">
+              <option value="manual">Entered manually</option>
+              <option value="watch">From wearable / watch</option>
+            </select>
+          </div>
+          <div class="flex gap-1 mt-3" style="flex-wrap: wrap;">
+            <button class="btn btn-ghost" onclick="checkerBack()">← Back</button>
+            <button class="btn btn-primary" id="analyze-btn">Analyze symptoms</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="checker-results" class="hidden">
+        <div class="card mb-3" style="background: var(--teal-deep); color: #fff;">
+          <span class="eyebrow" style="color: rgba(255,255,255,0.6);">Result</span>
+          <h2 style="color: #fff;">Analysis complete.</h2>
+          <p style="color: rgba(255,255,255,0.8); max-width: 540px;">
+            Based on your symptoms and vitals, here are the four most likely conditions. Confidence percentages reflect symptom-pattern matching against our clinical database — they are not diagnoses. Please consult a doctor.
+          </p>
+        </div>
+        <div id="vitals-warnings"></div>
+        <div id="disease-results"></div>
+        <div class="card mt-3">
+          <h3>Recommended specialists near you</h3>
+          <div id="suggested-doctors"></div>
+        </div>
+        <button class="btn btn-ghost mt-3" onclick="resetChecker()">↻ Start a new check</button>
+      </div>
+    </section>
+
+    <!-- APPOINTMENTS -->
+    <section id="tab-appointments" class="tab-section">
+      <div class="flex justify-between items-center mb-3" style="flex-wrap: wrap; gap: 0.5rem;">
+        <h3 style="margin: 0;">Your appointments</h3>
+        <button class="btn btn-primary" id="book-new-btn">+ Book new appointment</button>
+      </div>
+      <div id="appointments-list"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- HABITS -->
+    <section id="tab-habits" class="tab-section">
+      <div class="flex gap-1 mb-3" style="flex-wrap: wrap;">
+        <button class="btn btn-ghost btn-sm habit-filter active" data-cat="all">All</button>
+        <button class="btn btn-ghost btn-sm habit-filter" data-cat="exercise">Exercise</button>
+        <button class="btn btn-ghost btn-sm habit-filter" data-cat="diet">Diet</button>
+        <button class="btn btn-ghost btn-sm habit-filter" data-cat="sleep">Sleep</button>
+        <button class="btn btn-ghost btn-sm habit-filter" data-cat="mental">Mental</button>
+        <button class="btn btn-ghost btn-sm habit-filter" data-cat="lifestyle">Lifestyle</button>
+      </div>
+      <div class="habit-grid" id="habits-grid"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- MEDICATIONS -->
+    <section id="tab-medication" class="tab-section">
+      <div class="grid-2 mb-3">
+        <div class="stat"><div class="label">Active prescriptions</div><div class="value" id="m-active">—</div></div>
+        <div class="stat"><div class="label">Doses logged this week</div><div class="value" id="m-logged">—</div></div>
+      </div>
+      <h3>Your prescriptions</h3>
+      <p class="text-mute text-sm">Doctors can see your adherence here. Tap "Mark taken" each time you take a dose.</p>
+      <div id="rx-list"><div class="page-loader"><span class="spinner"></span></div></div>
+
+      <h3 class="mt-4">Log your vitals</h3>
+      <p class="text-mute text-sm">Add today's readings. Your doctor will see the trend.</p>
+      <div class="card">
+        <div class="vitals-grid">
+          <div class="vital-input-card"><label>Heart rate</label><input type="number" id="lv-hr" placeholder="bpm" /><div class="unit">bpm</div></div>
+          <div class="vital-input-card"><label>BP sys</label><input type="number" id="lv-sys" /><div class="unit">mmHg</div></div>
+          <div class="vital-input-card"><label>BP dia</label><input type="number" id="lv-dia" /><div class="unit">mmHg</div></div>
+          <div class="vital-input-card"><label>SpO₂</label><input type="number" id="lv-o2" /><div class="unit">%</div></div>
+          <div class="vital-input-card"><label>Sleep</label><input type="number" step="0.5" id="lv-sleep" /><div class="unit">hours</div></div>
+          <div class="vital-input-card"><label>Steps</label><input type="number" id="lv-steps" /><div class="unit">today</div></div>
+        </div>
+        <button class="btn btn-primary mt-3" onclick="logVitals()">Save reading</button>
+      </div>
+    </section>
+
+    <!-- MEDICINE SEARCH -->
+    <section id="tab-medicines" class="tab-section">
+      <div class="card mb-3">
+        <span class="eyebrow">Search</span>
+        <h3>Find a medicine nearby</h3>
+        <p>Search across registered pharmacies. Hit <strong>Request</strong> on any result to ask the pharmacy to set it aside for you.</p>
+        <div class="input-group">
+          <input type="text" id="med-search" class="form-input" placeholder="Search by medicine name or generic..." />
+          <input type="text" id="med-city" class="form-input" placeholder="City (optional)" style="max-width: 200px;" />
+          <button class="btn btn-primary" id="med-search-btn">Search</button>
+        </div>
+      </div>
+      <div id="medicine-results"></div>
+    </section>
+
+    <!-- REQUESTS -->
+    <section id="tab-requests" class="tab-section">
+      <h3>Your medicine requests</h3>
+      <p class="text-mute text-sm">Requests you've sent to pharmacies. They'll respond with availability and pickup info.</p>
+      <div id="requests-list"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="tab-profile" class="tab-section">
+      <h3>Your profile</h3>
+      <p class="text-mute text-sm">Keep this up-to-date so doctors have accurate information.</p>
+
+      <div class="card">
+        <span class="eyebrow">Profile photo</span>
+        <div class="photo-upload-wrap">
+          <div id="current-photo"><span class="profile-photo">?</span></div>
+          <div class="photo-upload-actions">
+            <label class="btn btn-primary btn-sm" for="photo-input">📷 Upload new photo</label>
+            <input type="file" id="photo-input" accept="image/*" />
+            <span class="text-xs text-mute">Max 2MB · auto-compressed</span>
+          </div>
+        </div>
+
+        <form id="profile-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Full name</label>
+              <input type="text" name="full_name" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" name="phone" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of birth</label>
+              <input type="date" name="date_of_birth" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select name="gender" class="form-select">
+                <option value="">—</option>
+                <option value="male">Male</option><option value="female">Female</option><option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Blood group</label>
+              <select name="blood_group" class="form-select">
+                <option value="">—</option>
+                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Height (cm)</label>
+              <input type="number" name="height_cm" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight (kg)</label>
+              <input type="number" name="weight_kg" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input type="text" name="city" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" name="state" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pincode</label>
+              <input type="text" name="pincode" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea name="address" class="form-textarea"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Known allergies</label>
+              <textarea name="allergies" class="form-textarea" placeholder="e.g. penicillin, peanuts..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Chronic conditions</label>
+              <textarea name="chronic_conditions" class="form-textarea" placeholder="e.g. diabetes, hypertension..."></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Emergency contact (name & phone)</label>
+            <input type="text" name="emergency_contact" class="form-input" placeholder="Jane Doe · +91 …" />
+          </div>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/patient.js"></script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediTrace — Intelligent healthcare, close to home</title>
+  <meta name="description" content="MediTrace links patients, doctors and pharmacies through a single clinical platform: symptom-driven triage, appointments, prescriptions and live medicine availability." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ====== LANDING ====== -->
+  <div id="landing-view">
+    <div class="container">
+      <nav class="landing-nav">
+        <a href="/" class="logo"><span class="mark">M</span> Medi<em class="italic">Trace</em></a>
+        <div class="flex gap-1 items-center">
+          <button class="btn btn-ghost btn-sm" onclick="showAuth('login')">Sign in</button>
+          <button class="btn btn-primary btn-sm" onclick="showAuth('register')">Get started</button>
+        </div>
+      </nav>
+
+      <section class="hero">
+        <div>
+          <span class="eyebrow">Digital Healthcare Platform · Est. 2026</span>
+          <h1>Healthcare that <span class="accent">listens</span><br/>before it prescribes.</h1>
+          <p style="font-size: 1.1rem; max-width: 520px;">
+            MediTrace turns your symptoms, vitals and history into a clinical conversation. Find probable conditions, book the right specialist nearby, track every medication, and locate the medicines you need — all in one quiet, careful place.
+          </p>
+          <div class="flex gap-1 mt-3">
+            <button class="btn btn-primary btn-lg" onclick="showAuth('register')">Create your account →</button>
+            <button class="btn btn-ghost btn-lg" onclick="showAuth('login')">I already have one</button>
+          </div>
+          <p class="text-sm text-mute mt-3">Try the demo · patient@demo.com / password123</p>
+        </div>
+
+        <aside class="hero-art">
+          <div class="hero-pulse">◉ live · vitals · symptom intake</div>
+          <h3 style="color:#fff; font-family: var(--serif); font-weight: 400; font-style: italic; font-size: 1.8rem;">"A second pair of eyes for every patient."</h3>
+          <div id="hero-pulse-line"></div>
+          <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; opacity: 0.6; letter-spacing: 0.15em;">HEART RATE</div>
+              <div style="font-family: var(--serif); font-size: 2rem;">72 <span style="font-size: 0.9rem; opacity: 0.7;">bpm</span></div>
+            </div>
+            <div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; opacity: 0.6; letter-spacing: 0.15em;">BLOOD PRESSURE</div>
+              <div style="font-family: var(--serif); font-size: 2rem;">118<span style="opacity: 0.5;">/</span>76</div>
+            </div>
+            <div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; opacity: 0.6; letter-spacing: 0.15em;">OXYGEN</div>
+              <div style="font-family: var(--serif); font-size: 2rem;">98<span style="font-size: 0.9rem; opacity: 0.7;">%</span></div>
+            </div>
+            <div>
+              <div style="font-family: var(--mono); font-size: 0.7rem; opacity: 0.6; letter-spacing: 0.15em;">GLUCOSE</div>
+              <div style="font-family: var(--serif); font-size: 2rem;">94 <span style="font-size: 0.9rem; opacity: 0.7;">mg/dL</span></div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="feature-row">
+        <div class="feature">
+          <span class="num">01</span>
+          <h3>For patients</h3>
+          <p>Log symptoms and vitals. Get four most-likely conditions with confidence percentages, then book a relevant specialist within minutes.</p>
+        </div>
+        <div class="feature">
+          <span class="num">02</span>
+          <h3>For doctors</h3>
+          <p>See incoming bookings, review patient histories and vitals trends, prescribe medications and exercises, and follow adherence over time.</p>
+        </div>
+        <div class="feature">
+          <span class="num">03</span>
+          <h3>For pharmacies</h3>
+          <p>List inventory with live stock status, pricing and location. Patients see what's available nearby and get directions to your shop.</p>
+        </div>
+      </section>
+
+      <footer style="padding: 2.5rem 0; text-align: center; color: var(--ink-mute); font-size: 0.85rem;">
+        <p style="margin: 0;">MediTrace is a clinical decision-support tool and does not replace professional medical advice. Always consult a licensed physician.</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ====== AUTH (split layout) ====== -->
+  <div id="auth-view" class="hidden">
+    <div class="auth-wrap">
+      <aside class="auth-art">
+        <a href="#" onclick="hideAuth()" class="logo" style="color:#fff;"><span class="mark">M</span> Medi<em class="italic" style="color: var(--gold);">Trace</em></a>
+        <div class="auth-art-hero">
+          <h1>Care that <em>follows</em><br/>the patient,<br/>not the paperwork.</h1>
+          <p style="color: rgba(255,255,255,0.7); max-width: 380px; margin-top: 1.5rem;">
+            One account, three perspectives. Whether you're seeking care, providing it, or stocking the medicines that make it possible — MediTrace is the connective tissue.
+          </p>
+        </div>
+        <div class="auth-art-foot">© 2026 MediTrace · Pune, India</div>
+      </aside>
+
+      <div class="auth-form-wrap">
+        <div class="auth-form">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Sign in</button>
+            <button class="auth-tab" data-tab="register">Create account</button>
+          </div>
+
+          <!-- LOGIN -->
+          <form id="login-form" class="auth-pane">
+            <h2 style="margin-bottom: 0.3rem;">Welcome back.</h2>
+            <p class="text-mute mb-3">Sign in to continue your care journey.</p>
+
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-input" required placeholder="you@example.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" name="password" class="form-input" required placeholder="••••••••" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Sign in</button>
+
+            <div class="mt-3 text-sm text-mute">
+              <strong style="color: var(--ink);">Demo accounts</strong> (password <code>password123</code>):<br/>
+              patient@demo.com · doctor@demo.com · cardio@demo.com · neuro@demo.com · medical@demo.com
+            </div>
+          </form>
+
+          <!-- REGISTER -->
+          <form id="register-form" class="auth-pane hidden">
+            <h2 style="margin-bottom: 0.3rem;">Join MediTrace.</h2>
+            <p class="text-mute mb-3">Pick your role to get started. You can add documents later.</p>
+
+            <div class="user-type-grid" id="user-type-grid">
+              <div class="user-type-card active" data-type="patient">
+                <div class="ut-icon">🧍</div>
+                <div class="ut-label">Patient</div>
+              </div>
+              <div class="user-type-card" data-type="doctor">
+                <div class="ut-icon">🩺</div>
+                <div class="ut-label">Doctor</div>
+              </div>
+              <div class="user-type-card" data-type="medical">
+                <div class="ut-icon">💊</div>
+                <div class="ut-label">Pharmacy</div>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Full name</label>
+                <input type="text" name="full_name" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" name="phone" class="form-input" placeholder="+91 …" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password <span class="text-mute text-xs">(min 6 characters)</span></label>
+              <input type="password" name="password" class="form-input" minlength="6" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Create my account</button>
+            <p class="text-xs text-mute mt-2">By continuing you agree to our terms. We'll never share your data.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script>
+    // If already logged in, route to dashboard
+    (function () {
+      const u = Auth.getUser();
+      if (Auth.isLoggedIn() && u) {
+        const t = u.user_type === 'patient' ? '/pages/patient.html'
+              : u.user_type === 'doctor' ? '/pages/doctor.html'
+              : '/pages/medical.html';
+        window.location.href = t;
+      }
+    })();
+
+    // Add heartbeat line to hero
+    document.getElementById('hero-pulse-line').innerHTML = heartbeatSVG('#c9583a');
+
+    function showAuth(tab) {
+      document.getElementById('landing-view').classList.add('hidden');
+      document.getElementById('auth-view').classList.remove('hidden');
+      selectAuthTab(tab);
+    }
+    function hideAuth() {
+      document.getElementById('auth-view').classList.add('hidden');
+      document.getElementById('landing-view').classList.remove('hidden');
+    }
+
+    function selectAuthTab(tab) {
+      document.querySelectorAll('.auth-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
+    }
+    document.querySelectorAll('.auth-tab').forEach(b => b.addEventListener('click', () => selectAuthTab(b.dataset.tab)));
+
+    // User type selection
+    let selectedType = 'patient';
+    document.querySelectorAll('.user-type-card').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.user-type-card').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        selectedType = c.dataset.type;
+      });
+    });
+
+    // Login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target;
+      const btn = f.querySelector('button[type=submit]');
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Signing in…';
+      try {
+        const res = await api('/auth/login', { method: 'POST', body: {
+          email: f.email.value.trim(),
+          password: f.password.value,
+        }});
+        if (!res.success) { toast(res.message || 'Login failed', 'error'); return; }
+        Auth.setSession(res.token, res.user);
+        toast('Welcome back!', 'success');
+        const t = res.user.user_type === 'patient' ? '/pages/patient.html'
+              : res.user.user_type === 'doctor' ? '/pages/doctor.html'
+              : '/pages/medical.html';
+        setTimeout(() => window.location.href = t, 400);
+      } catch (err) {
+        toast('Network error', 'error');
+      } finally {
+        btn.disabled = false; btn.innerHTML = 'Sign in';
+      }
+    });
+
+    // Register
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target;
+      const btn = f.querySelector('button[type=submit]');
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Creating…';
+      try {
+        const res = await api('/auth/register', { method: 'POST', body: {
+          user_type: selectedType,
+          full_name: f.full_name.value.trim(),
+          email: f.email.value.trim(),
+          phone: f.phone.value.trim(),
+          password: f.password.value,
+        }});
+        if (!res.success) { toast(res.message || 'Registration failed', 'error'); return; }
+        Auth.setSession(res.token, res.user);
+        toast(`Account created · ID ${res.user.unique_id}`, 'success');
+        const t = res.user.user_type === 'patient' ? '/pages/patient.html'
+              : res.user.user_type === 'doctor' ? '/pages/doctor.html'
+              : '/pages/medical.html';
+        setTimeout(() => window.location.href = t, 600);
+      } catch (err) {
+        toast('Network error', 'error');
+      } finally {
+        btn.disabled = false; btn.innerHTML = 'Create my account';
+      }
+    });
+  </script>
+</body>
+</html>

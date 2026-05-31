@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Dashboard · MediTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="dash-shell">
+  <aside class="dash-sidebar" id="sidebar">
+    <div class="dash-logo">
+      <a href="/pages/doctor.html" class="logo-mark"><span class="mark">M</span> Medi<em>Trace</em></a>
+    </div>
+    <div class="dash-user" id="sidebar-user">
+      <span class="profile-photo profile-photo-sm">?</span>
+      <div class="uname"><div class="nm">Dr. <span id="u-name">—</span></div><div class="uid" id="u-id">—</div></div>
+    </div>
+    <nav class="dash-nav">
+      <button class="dash-nav-item active" data-tab="home"><span class="nav-icon">⌂</span> Overview</button>
+      <button class="dash-nav-item" data-tab="appointments"><span class="nav-icon">◧</span> Appointments</button>
+      <button class="dash-nav-item" data-tab="patients"><span class="nav-icon">◐</span> Patients</button>
+      <button class="dash-nav-item" data-tab="prescribe"><span class="nav-icon">℞</span> Write Prescription</button>
+      <button class="dash-nav-item" data-tab="rx-list"><span class="nav-icon">◊</span> My Prescriptions</button>
+      <button class="dash-nav-item" data-tab="profile"><span class="nav-icon">◉</span> Profile</button>
+    </nav>
+    <div class="dash-foot">
+      <div id="lang-switcher-container"></div>
+      <div id="theme-toggle-container"></div>
+      <button onclick="Auth.logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header">
+      <div>
+        <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <span class="eyebrow" id="tab-eyebrow">Overview</span>
+        <h1 id="tab-title">Practice dashboard</h1>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section id="tab-home" class="tab-section active">
+      <div class="stat-grid">
+        <div class="stat"><div class="label">Today's appts</div><div class="value" id="stat-today">—</div></div>
+        <div class="stat"><div class="label">Pending</div><div class="value" id="stat-pending">—</div></div>
+        <div class="stat"><div class="label">Patients</div><div class="value" id="stat-patients">—</div></div>
+        <div class="stat"><div class="label">Active Rx</div><div class="value" id="stat-rx">—</div></div>
+      </div>
+
+      <div class="card mb-3">
+        <span class="eyebrow">Upcoming</span>
+        <h3>Today & tomorrow</h3>
+        <div id="upcoming-appts"><div class="page-loader"><span class="spinner"></span></div></div>
+      </div>
+    </section>
+
+    <!-- APPOINTMENTS -->
+    <section id="tab-appointments" class="tab-section">
+      <div class="flex gap-1 mb-3" style="flex-wrap: wrap;">
+        <button class="btn btn-ghost btn-sm appt-filter active" data-status="all">All</button>
+        <button class="btn btn-ghost btn-sm appt-filter" data-status="pending">Pending</button>
+        <button class="btn btn-ghost btn-sm appt-filter" data-status="confirmed">Confirmed</button>
+        <button class="btn btn-ghost btn-sm appt-filter" data-status="completed">Completed</button>
+      </div>
+      <div id="appointments-list"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- PATIENTS -->
+    <section id="tab-patients" class="tab-section">
+      <input type="text" id="patient-search" class="form-input mb-3" placeholder="Search patients by name..." />
+      <div id="patients-list"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- PRESCRIBE -->
+    <section id="tab-prescribe" class="tab-section">
+      <div class="card">
+        <span class="eyebrow">New prescription</span>
+        <h3>Write a prescription</h3>
+        <form id="rx-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Patient</label>
+              <select id="rx-patient" class="form-select" required>
+                <option value="">Select patient…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Diagnosis</label>
+              <input type="text" id="rx-diagnosis" class="form-input" placeholder="e.g. Acute pharyngitis" />
+            </div>
+          </div>
+
+          <h4 class="mt-3">Medicines</h4>
+          <div id="med-rows"></div>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="addMedRow()">+ Add medicine</button>
+
+          <h4 class="mt-3">Exercises (optional)</h4>
+          <div id="ex-rows"></div>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="addExRow()">+ Add exercise</button>
+
+          <div class="form-group mt-3">
+            <label class="form-label">Notes for patient</label>
+            <textarea id="rx-notes" class="form-textarea" placeholder="Lifestyle advice, follow-up instructions..."></textarea>
+          </div>
+
+          <div class="flex gap-1">
+            <button type="submit" class="btn btn-primary">Issue prescription</button>
+            <button type="reset" class="btn btn-ghost" onclick="resetRxForm()">Clear</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- RX LIST -->
+    <section id="tab-rx-list" class="tab-section">
+      <h3>Prescriptions you've written</h3>
+      <div id="rx-list"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="tab-profile" class="tab-section">
+      <h3>Your professional profile</h3>
+      <p class="text-mute text-sm">This is what patients see when they search for a doctor.</p>
+      <div class="card">
+        <span class="eyebrow">Profile photo</span>
+        <div class="photo-upload-wrap">
+          <div id="current-photo"><span class="profile-photo">?</span></div>
+          <div class="photo-upload-actions">
+            <label class="btn btn-primary btn-sm" for="photo-input">📷 Upload new photo</label>
+            <input type="file" id="photo-input" accept="image/*" />
+            <span class="text-xs text-mute">Max 2MB · auto-compressed</span>
+          </div>
+        </div>
+        <form id="profile-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Full name</label>
+              <input type="text" name="full_name" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" name="phone" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Specialization</label>
+              <select name="specialization" class="form-select">
+                <option value="">—</option>
+                <option>General Physician</option>
+                <option>Cardiologist</option>
+                <option>Neurologist</option>
+                <option>Endocrinologist</option>
+                <option>Pulmonologist</option>
+                <option>Gastroenterologist</option>
+                <option>Dermatologist</option>
+                <option>Orthopedist</option>
+                <option>Psychiatrist</option>
+                <option>ENT Specialist</option>
+                <option>Ophthalmologist</option>
+                <option>Urologist</option>
+                <option>Nephrologist</option>
+                <option>Pediatrician</option>
+                <option>Infectious Disease</option>
+                <option>Rheumatologist</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Medical license number</label>
+              <input type="text" name="license_number" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Qualification</label>
+              <input type="text" name="qualification" class="form-input" placeholder="MBBS, MD, …" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Years of experience</label>
+              <input type="number" name="experience_years" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Consultation fee (₹)</label>
+              <input type="number" name="consultation_fee" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input type="text" name="city" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Clinic name</label>
+              <input type="text" name="clinic_name" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Clinic address</label>
+            <textarea name="clinic_address" class="form-textarea"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" name="state" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pincode</label>
+              <input type="text" name="pincode" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Available days</label>
+            <input type="text" name="available_days" class="form-input" placeholder="Mon,Tue,Wed,Fri" />
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Available from</label>
+              <input type="time" name="available_from" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Available to</label>
+              <input type="time" name="available_to" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">About</label>
+            <textarea name="bio" class="form-textarea" placeholder="Brief professional bio for patients..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/doctor.js"></script>
+</body>
+</html>

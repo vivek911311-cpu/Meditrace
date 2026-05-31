@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pharmacy Dashboard · MediTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="dash-shell">
+  <aside class="dash-sidebar" id="sidebar">
+    <div class="dash-logo">
+      <a href="/pages/medical.html" class="logo-mark"><span class="mark">M</span> Medi<em>Trace</em></a>
+    </div>
+    <div class="dash-user" id="sidebar-user">
+      <span class="profile-photo profile-photo-sm">?</span>
+      <div class="uname"><div class="nm" id="u-name">—</div><div class="uid" id="u-id">—</div></div>
+    </div>
+    <nav class="dash-nav">
+      <button class="dash-nav-item active" data-tab="home"><span class="nav-icon">⌂</span> Overview</button>
+      <button class="dash-nav-item" data-tab="inventory"><span class="nav-icon">◊</span> Inventory</button>
+      <button class="dash-nav-item" data-tab="add"><span class="nav-icon">+</span> Add Medicine</button>
+      <button class="dash-nav-item" data-tab="requests"><span class="nav-icon">📩</span> Incoming Requests</button>
+      <button class="dash-nav-item" data-tab="profile"><span class="nav-icon">◉</span> Shop Profile</button>
+    </nav>
+    <div class="dash-foot">
+      <div id="lang-switcher-container"></div>
+      <div id="theme-toggle-container"></div>
+      <button onclick="Auth.logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header">
+      <div>
+        <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <span class="eyebrow" id="tab-eyebrow">Overview</span>
+        <h1 id="tab-title">Pharmacy dashboard</h1>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section id="tab-home" class="tab-section active">
+      <div class="stat-grid">
+        <div class="stat"><div class="label">Total items</div><div class="value" id="stat-total">—</div></div>
+        <div class="stat"><div class="label">In stock</div><div class="value" id="stat-in">—</div></div>
+        <div class="stat"><div class="label">Low stock</div><div class="value" id="stat-low">—</div></div>
+        <div class="stat"><div class="label">Out of stock</div><div class="value" id="stat-out">—</div></div>
+      </div>
+      <div class="card">
+        <h3>Welcome to MediTrace for Pharmacies</h3>
+        <p>List your medicine inventory so patients searching for medicines near them can find your shop. Keep stock status, pricing and expiry dates up-to-date.</p>
+        <div class="flex gap-1 mt-2">
+          <button class="btn btn-primary" onclick="switchTab('add')">+ Add a medicine</button>
+          <button class="btn btn-ghost" onclick="switchTab('inventory')">View inventory</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section id="tab-inventory" class="tab-section">
+      <div class="flex justify-between items-center mb-3" style="flex-wrap: wrap; gap: 0.5rem;">
+        <div class="flex gap-1" style="flex-wrap: wrap;">
+          <button class="btn btn-ghost btn-sm inv-filter active" data-status="all">All</button>
+          <button class="btn btn-ghost btn-sm inv-filter" data-status="in_stock">In stock</button>
+          <button class="btn btn-ghost btn-sm inv-filter" data-status="low_stock">Low stock</button>
+          <button class="btn btn-ghost btn-sm inv-filter" data-status="out_of_stock">Out</button>
+        </div>
+        <input type="text" id="inv-search" class="form-input" placeholder="Search inventory..." style="max-width: 280px;" />
+      </div>
+      <div id="inventory-list"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- ADD -->
+    <section id="tab-add" class="tab-section">
+      <div class="card">
+        <span class="eyebrow">Add to inventory</span>
+        <h3>Add a medicine</h3>
+        <p class="text-mute text-sm">Enter the medicine details. Stock status is computed from quantity.</p>
+
+        <form id="add-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Medicine name *</label>
+              <input type="text" id="med-name" class="form-input" placeholder="e.g. Paracetamol 500mg" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Generic name</label>
+              <input type="text" id="med-generic" class="form-input" placeholder="Acetaminophen" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Manufacturer</label>
+              <input type="text" id="med-mfr" class="form-input" placeholder="GSK, Cipla, etc." />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="med-category" class="form-select">
+                <option value="">—</option>
+                <option>Tablet</option><option>Capsule</option><option>Syrup</option>
+                <option>Injection</option><option>Cream</option><option>Drops</option>
+                <option>Inhaler</option><option>Ointment</option>
+                <option>Antibiotic</option><option>Analgesic</option><option>Antacid</option>
+                <option>Antihistamine</option><option>Diabetes</option><option>Cardiovascular</option>
+                <option>Vitamin</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description (optional)</label>
+            <textarea id="med-desc" class="form-textarea" placeholder="Notes about this medicine..."></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Price (₹) *</label>
+              <input type="number" step="0.01" id="inv-price" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Stock quantity</label>
+              <input type="number" id="inv-stock" class="form-input" value="0" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expiry date (optional)</label>
+              <input type="date" id="inv-expiry" class="form-input" />
+            </div>
+          </div>
+
+          <div class="flex gap-1">
+            <button type="submit" class="btn btn-primary">Add to inventory</button>
+            <button type="reset" class="btn btn-ghost">Clear</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- INCOMING REQUESTS -->
+    <section id="tab-requests" class="tab-section">
+      <h3>Incoming medicine requests</h3>
+      <p class="text-mute text-sm">Patients can request medicines through MediTrace. Accept, mark ready, or reject below.</p>
+      <div id="incoming-requests"><div class="page-loader"><span class="spinner"></span></div></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="tab-profile" class="tab-section">
+      <h3>Pharmacy profile</h3>
+      <p class="text-mute text-sm">This is what patients see when they find your shop.</p>
+      <div class="card">
+        <span class="eyebrow">Shop photo / logo</span>
+        <div class="photo-upload-wrap">
+          <div id="current-photo"><span class="profile-photo">?</span></div>
+          <div class="photo-upload-actions">
+            <label class="btn btn-primary btn-sm" for="photo-input">📷 Upload new photo</label>
+            <input type="file" id="photo-input" accept="image/*" />
+            <span class="text-xs text-mute">Max 2MB · auto-compressed</span>
+          </div>
+        </div>
+        <form id="profile-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Account holder name</label>
+              <input type="text" name="full_name" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" name="phone" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Shop / Pharmacy name *</label>
+              <input type="text" name="shop_name" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">License number</label>
+              <input type="text" name="license_number" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input type="text" name="city" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" name="state" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pincode</label>
+              <input type="text" name="pincode" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">&nbsp;</label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; padding-top: 0.5rem;">
+                <input type="checkbox" name="is_24_hours" /> Open 24 hours
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea name="address" class="form-textarea"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Latitude</label>
+              <input type="number" step="any" name="latitude" class="form-input" placeholder="18.5204" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Longitude</label>
+              <input type="number" step="any" name="longitude" class="form-input" placeholder="73.8567" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Opening time</label>
+              <input type="time" name="opening_time" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Closing time</label>
+              <input type="time" name="closing_time" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" name="delivery_available" /> Delivery available
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/medical.js"></script>
+</body>
+</html>
