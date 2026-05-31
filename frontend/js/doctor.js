@@ -15,9 +15,7 @@ const state = {
 async function initDoctor() {
   renderSidebarUserDoc();
   const themeContainer = document.getElementById('theme-toggle-container');
-  const langContainer = document.getElementById('lang-switcher-container');
   if (themeContainer) renderThemeToggle(themeContainer);
-  if (langContainer) renderLangSwitcher(langContainer);
 
   document.querySelectorAll('.dash-nav-item').forEach(b => {
     b.addEventListener('click', () => switchTab(b.dataset.tab));

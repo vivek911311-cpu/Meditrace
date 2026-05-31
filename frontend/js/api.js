@@ -4,7 +4,6 @@ const API_BASE = '/api';
 const TOKEN_KEY = 'meditrace_token';
 const USER_KEY = 'meditrace_user';
 const THEME_KEY = 'meditrace_theme';
-const LANG_KEY = 'meditrace_lang';
 
 const Auth = {
   getToken: () => localStorage.getItem(TOKEN_KEY),
@@ -79,132 +78,7 @@ const Theme = {
 // Apply theme immediately to avoid flash
 Theme.init();
 
-/* ============ LANGUAGE / I18N ============ */
-const TRANSLATIONS = {
-  en: {
-    // Common
-    'app.name': 'MediTrace',
-    'common.signin': 'Sign in',
-    'common.signout': 'Sign out',
-    'common.signup': 'Create account',
-    'common.save': 'Save',
-    'common.cancel': 'Cancel',
-    'common.delete': 'Delete',
-    'common.edit': 'Edit',
-    'common.close': 'Close',
-    'common.back': 'Back',
-    'common.next': 'Next',
-    'common.search': 'Search',
-    'common.loading': 'Loading…',
-    'common.theme': 'Theme',
-    'common.language': 'Language',
-    // Sidebar nav
-    'nav.home': 'Home',
-    'nav.checker': 'Symptom Checker',
-    'nav.appointments': 'Appointments',
-    'nav.habits': 'Healthy Habits',
-    'nav.medication': 'Medications',
-    'nav.medicines': 'Find Medicine',
-    'nav.requests': 'My Requests',
-    'nav.profile': 'Profile',
-    'nav.overview': 'Overview',
-    'nav.patients': 'Patients',
-    'nav.prescribe': 'Write Prescription',
-    'nav.rxlist': 'My Prescriptions',
-    'nav.inventory': 'Inventory',
-    'nav.add': 'Add Medicine',
-    'nav.incoming': 'Incoming Requests',
-  },
-  hi: {
-    'app.name': 'मेडीट्रेस',
-    'common.signin': 'साइन इन',
-    'common.signout': 'साइन आउट',
-    'common.signup': 'खाता बनाएं',
-    'common.save': 'सेव करें',
-    'common.cancel': 'रद्द करें',
-    'common.delete': 'हटाएं',
-    'common.edit': 'संपादित करें',
-    'common.close': 'बंद करें',
-    'common.back': 'पीछे',
-    'common.next': 'आगे',
-    'common.search': 'खोजें',
-    'common.loading': 'लोड हो रहा है…',
-    'common.theme': 'थीम',
-    'common.language': 'भाषा',
-    'nav.home': 'मुख्य पृष्ठ',
-    'nav.checker': 'लक्षण जांच',
-    'nav.appointments': 'अपॉइंटमेंट',
-    'nav.habits': 'स्वस्थ आदतें',
-    'nav.medication': 'दवाइयां',
-    'nav.medicines': 'दवा खोजें',
-    'nav.requests': 'मेरे अनुरोध',
-    'nav.profile': 'प्रोफाइल',
-    'nav.overview': 'अवलोकन',
-    'nav.patients': 'मरीज',
-    'nav.prescribe': 'पर्ची लिखें',
-    'nav.rxlist': 'मेरी पर्चियां',
-    'nav.inventory': 'स्टॉक',
-    'nav.add': 'दवा जोड़ें',
-    'nav.incoming': 'आने वाले अनुरोध',
-  },
-  mr: {
-    'app.name': 'मेडीट्रेस',
-    'common.signin': 'साइन इन',
-    'common.signout': 'साइन आउट',
-    'common.signup': 'खाते तयार करा',
-    'common.save': 'जतन करा',
-    'common.cancel': 'रद्द करा',
-    'common.delete': 'काढून टाका',
-    'common.edit': 'संपादन',
-    'common.close': 'बंद करा',
-    'common.back': 'मागे',
-    'common.next': 'पुढे',
-    'common.search': 'शोधा',
-    'common.loading': 'लोड होत आहे…',
-    'common.theme': 'थीम',
-    'common.language': 'भाषा',
-    'nav.home': 'मुख्यपृष्ठ',
-    'nav.checker': 'लक्षणे तपासणी',
-    'nav.appointments': 'अपॉइंटमेंट',
-    'nav.habits': 'निरोगी सवयी',
-    'nav.medication': 'औषधे',
-    'nav.medicines': 'औषध शोधा',
-    'nav.requests': 'माझ्या विनंत्या',
-    'nav.profile': 'प्रोफाइल',
-    'nav.overview': 'अवलोकन',
-    'nav.patients': 'रुग्ण',
-    'nav.prescribe': 'प्रिस्क्रिप्शन लिहा',
-    'nav.rxlist': 'माझ्या प्रिस्क्रिप्शन्स',
-    'nav.inventory': 'इन्व्हेंटरी',
-    'nav.add': 'औषध जोडा',
-    'nav.incoming': 'येणाऱ्या विनंत्या',
-  }
-};
 
-const Lang = {
-  get: () => localStorage.getItem(LANG_KEY) || 'en',
-  set: (lang) => {
-    if (!TRANSLATIONS[lang]) lang = 'en';
-    localStorage.setItem(LANG_KEY, lang);
-    Lang.apply();
-    if (Auth.isLoggedIn()) {
-      api('/auth/preferences', { method: 'PUT', body: { lang } }).catch(() => {});
-    }
-  },
-  t: (key) => {
-    const lang = Lang.get();
-    return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) || TRANSLATIONS.en[key] || key;
-  },
-  apply: () => {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.dataset.i18n;
-      el.textContent = Lang.t(key);
-    });
-    document.documentElement.setAttribute('lang', Lang.get());
-  }
-};
-
-/* Toast notifications */
 function toast(message, type = 'info', duration = 3500) {
   let stack = document.querySelector('.toast-stack');
   if (!stack) {
@@ -325,16 +199,4 @@ function renderThemeToggle(container) {
   container.innerHTML = `<button class="theme-toggle" onclick="Theme.toggle(); renderThemeToggle(this.parentElement);"><span class="toggle-icon">${icon}</span><span>${label}</span></button>`;
 }
 
-/* Language switcher widget */
-function renderLangSwitcher(container) {
-  if (!container) return;
-  const cur = Lang.get();
-  container.innerHTML = `<div class="lang-switcher">
-    <button class="${cur === 'en' ? 'active' : ''}" onclick="Lang.set('en'); renderLangSwitcher(this.parentElement.parentElement);">EN</button>
-    <button class="${cur === 'hi' ? 'active' : ''}" onclick="Lang.set('hi'); renderLangSwitcher(this.parentElement.parentElement);">हि</button>
-    <button class="${cur === 'mr' ? 'active' : ''}" onclick="Lang.set('mr'); renderLangSwitcher(this.parentElement.parentElement);">मरा</button>
-  </div>`;
-}
 
-/* Apply language on page load */
-document.addEventListener('DOMContentLoaded', () => Lang.apply());

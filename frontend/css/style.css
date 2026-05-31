@@ -48,7 +48,7 @@
   --bg: #0e1614;
   --bg-soft: #161f1c;
   --bg-card: #1c2724;
-  --ink: #1b1b1a;
+  --ink: #e8e4db;
   --ink-soft: #b8c0bd;
   --ink-mute: #828a87;
   --line: #2b3733;
@@ -1179,31 +1179,7 @@ table.simple th {
   background: var(--bg-soft);
 }
 
-/* Language switcher in sidebar */
-.lang-switcher {
-  display: flex;
-  gap: 0.2rem;
-  background: rgba(255,255,255,0.05);
-  border-radius: 999px;
-  padding: 0.2rem;
-  margin-bottom: 0.5rem;
-}
-.lang-switcher button {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: rgba(246,243,236,0.6);
-  font-size: 0.7rem;
-  font-weight: 500;
-  padding: 0.35rem 0.4rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-family: inherit;
-}
-.lang-switcher button.active {
-  background: var(--teal);
-  color: #fff;
-}
+
 
 /* Make sure inputs/cards adapt to dark mode */
 [data-theme="dark"] .form-input,
@@ -1223,6 +1199,50 @@ table.simple th {
 [data-theme="dark"] table.simple th {
   background: var(--bg-soft);
 }
+
+/* Dark mode — alert boxes */
+[data-theme="dark"] .alert-warn { background: rgba(184,138,46,0.15); color: var(--warn); }
+[data-theme="dark"] .alert-bad { background: rgba(183,58,42,0.15); color: var(--bad); }
+[data-theme="dark"] .alert-info { background: rgba(74,147,136,0.15); color: var(--teal-glow); }
+
+/* Dark mode — stock tags */
+[data-theme="dark"] .stock-tag.in_stock { background: rgba(46,125,91,0.2); color: var(--ok); }
+[data-theme="dark"] .stock-tag.low_stock { background: rgba(184,138,46,0.2); color: var(--warn); }
+[data-theme="dark"] .stock-tag.out_of_stock { background: rgba(183,58,42,0.2); color: var(--bad); }
+
+/* Dark mode — status tags */
+[data-theme="dark"] .status-tag.completed { background: rgba(46,125,91,0.2); color: var(--ok); }
+[data-theme="dark"] .status-tag.confirmed,
+[data-theme="dark"] .status-tag.active { background: rgba(74,147,136,0.2); color: var(--teal-glow); }
+[data-theme="dark"] .status-tag.pending { background: rgba(184,138,46,0.2); color: var(--warn); }
+[data-theme="dark"] .status-tag.cancelled { background: rgba(183,58,42,0.2); color: var(--bad); }
+
+/* Dark mode — severity tags */
+[data-theme="dark"] .sev-tag.mild { background: rgba(184,138,46,0.2); color: var(--gold); }
+[data-theme="dark"] .sev-tag.moderate { background: rgba(224,119,97,0.2); color: var(--ember); }
+[data-theme="dark"] .sev-tag.severe { background: rgba(183,58,42,0.2); color: var(--bad); }
+
+/* Dark mode — req status */
+[data-theme="dark"] .req-status.pending { background: rgba(184,138,46,0.2); color: var(--warn); }
+[data-theme="dark"] .req-status.accepted { background: rgba(74,147,136,0.2); color: var(--teal-glow); }
+[data-theme="dark"] .req-status.ready,
+[data-theme="dark"] .req-status.completed { background: rgba(46,125,91,0.2); color: var(--ok); }
+[data-theme="dark"] .req-status.rejected { background: rgba(183,58,42,0.2); color: var(--bad); }
+
+/* Dark mode — prob ring bg circle */
+[data-theme="dark"] .prob-ring circle:first-child { stroke: var(--line); }
+
+/* Dark mode — modal backdrop */
+[data-theme="dark"] .modal-backdrop { background: rgba(0,0,0,0.6); }
+
+/* Dark mode — demo accounts code tag */
+[data-theme="dark"] code { background: var(--bg-soft); color: var(--ink); padding: 0.1em 0.3em; border-radius: 3px; }
+
+/* Dark mode — landing page logo */
+[data-theme="dark"] .logo { color: var(--ink); }
+
+/* Dark mode — auth form strong text */
+[data-theme="dark"] .auth-pane strong { color: var(--ink); }
 
 /* Smooth theme transition */
 body, .card, .stat, .list-card, .doctor-card, .habit-card, .req-card {
